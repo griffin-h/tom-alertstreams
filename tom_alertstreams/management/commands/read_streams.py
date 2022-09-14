@@ -3,12 +3,14 @@ import logging
 import os
 
 from django.core.management.base import BaseCommand, CommandError
-#from django.conf import settings
+from django.conf import settings
 
 from hop import Stream
 from hop.auth import Auth
 from hop.io import StartPosition, Metadata
 from hop.models import GCNCircular, JSONBlob
+
+from tom_alertstreams.alertstreams import alertstream
 
 
 logger = logging.getLogger(__name__)
@@ -82,6 +84,12 @@ class Command(BaseCommand):
             'hermes.test': self._update_db_with_hermes_alert,
             'sys.heartbeat': self._heartbeat_handler
         }
+
+
+        logger.info('read_streams finding alert_steams...')
+        for alert_stream in alertstream.get_default_alert_streams():
+            logger.info(f'read_streams alert_steam: {alert_stream}')
+
 
         # instanciate the Stream in a way that sets the io.StartPosition
         stream = Stream(auth=hop_auth, start_at=start_position)
