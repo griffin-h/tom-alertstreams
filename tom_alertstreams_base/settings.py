@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-import logging
+import logging.config
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -136,13 +137,21 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         #'level': 'WARNING',
-        #'level': 'INFO',
-        'level': 'DEBUG',
-        
+        'level': 'INFO',
+        #'level': 'DEBUG',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
     },
 }
+logging.config.dictConfig(LOGGING)
 
 try:
+    logging.info('Looking for local_settings.py')
     from local_settings import *  # noqa
 except ImportError:
     pass
