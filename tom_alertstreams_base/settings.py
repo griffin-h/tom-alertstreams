@@ -153,8 +153,9 @@ logging.config.dictConfig(LOGGING)
 ALERT_STREAMS = [
     {
         # TODO: refactor HopskotchAlertStream to alertstreams.hopskotch.py
-        # 'alertsteams.hopskotch.HopskotchAlertStream',
+
         'NAME': 'tom_alertstreams.alertstreams.alertstream.HopskotchAlertStream',
+        # 'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
         'OPTIONS' : {
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
@@ -164,15 +165,15 @@ ALERT_STREAMS = [
                 'tomtoolkit.test',
                 'hermes.test'
                 ],
-        }
+        },
     },
     # TODO: implement for generality
     #{
-    #    'NAME': 'alertstreams.gcn.GCNAlertStream',
+    #    'NAME': 'tom_alertstreams.alertstreams.gcn.GCNAlertStream',
     #    'OPTIONS': {},
     #}
-
 ]
+
 
 try:
     logging.info('Looking for local_settings.py')
