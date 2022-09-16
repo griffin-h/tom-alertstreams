@@ -1,6 +1,7 @@
 import abc
+from  datetime import datetime, timezone
 import logging
-import re
+import os
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -19,13 +20,17 @@ def get_default_alert_streams():
     return get_alert_streams(settings.ALERT_STREAMS)
 
 
-def get_alert_streams(alert_stream_configs):
-    """Return the AlertStreams configured in the given alert_stream_configs dict.
+def get_alert_streams(alert_stream_configs: list):
+    """Return the AlertStreams configured in the given alert_stream_configs
+    (a list of configuration dictionaries )
 
     Use get_default_alert_streams() if you want the AlertStreams configured in settings.py.
     """
     alert_streams = [] # build and return this list of AlertStream subclass instances
     for alert_stream_config in alert_stream_configs:
+        if not alert_stream_config['OPTIONS'].get('ACTIVE', True):
+            logger.debug(f'get_alert_streams - ignoring inactive stream: {alert_stream_config["NAME"]}')
+            continue  # skip configs that are not active; default to ACTIVE
         try:
             klass = import_string(alert_stream_config['NAME'])
         except ImportError:
@@ -43,8 +48,30 @@ def get_alert_streams(alert_stream_configs):
 
 
 class AlertStream(abc.ABC):
+    """Base class for specific alert streams like Hopskotch, GCNClassic, etc.
+
+    * kwargs to __init__ is the OPTIONS dictionary defined in ALERT_STREAMS configuration
+    dictionary (for example, see settings.py).
+    * allowed_keys and required_keys should be defined as class properties in subclasses.
+    * The allowed_keys are turned into instance properties in __init__.
+    * Missing required_keys result in an ImproperlyConfigured Django exception.
+
+
+    To implmement subclass:
+    1. define allowed_key, required_keys as class variables
+       <say what these do: used with OPTIONS dict in ALERT_STREAMS config dict>
+    2. implement listen()
+       this method probably doesn't return
+    3. write your alert_handlers. which proably take and alert do something.
+       the HopskotchAlertStreamClass defines a dictionary keyed by topic with
+       callable values (i.e call this method with alerts from this topic). You
+       may want that, too.
+    4.
+    """
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
+
         # filter the kwargs by allowed keys and add them as properties to AlertStream instance
         self.__dict__.update((k.lower(), v) for k, v in kwargs.items() if k in self.allowed_keys)
 
