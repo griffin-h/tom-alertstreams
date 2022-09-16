@@ -168,10 +168,12 @@ ALERT_STREAMS = [
         },
     },
     # TODO: implement for generality
-    #{
-    #    'NAME': 'tom_alertstreams.alertstreams.gcn.GCNAlertStream',
-    #    'OPTIONS': {},
-    #}
+    {
+        'NAME': 'tom_alertstreams.alertstreams.gcn.GCNAlertStream',
+        'OPTIONS': {
+            'ACTIVE': False,
+        },
+    }
 ]
 
 
