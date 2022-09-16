@@ -52,12 +52,15 @@ class AlertStream(abc.ABC):
         if missing_keys:
             msg = (
                 f'The following required keys are missing from the configuration OPTIONS of '
-                f'{type(self).__qualname__}: {list(missing_keys)} ; '
+                f'{self._get_stream_classname()}: {list(missing_keys)} ; '
                 f'These keys were found: {list(kwargs.keys())} ; '
                 f'Check your ALERT_STREAMS setting.'
             )
             raise ImproperlyConfigured(msg)
 
+
+    def _get_stream_classname(self) -> str:
+        return type(self).__qualname__
 
     def get_stream_url(self) -> str:
         return self.url
