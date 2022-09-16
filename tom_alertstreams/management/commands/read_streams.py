@@ -10,7 +10,7 @@ from hop.auth import Auth
 from hop.io import StartPosition, Metadata
 from hop.models import GCNCircular, JSONBlob
 
-from tom_alertstreams.alertstreams import alertstream
+from tom_alertstreams.alertstreams.alertstream import AlertStream, get_default_alert_streams
 
 
 logger = logging.getLogger(__name__)
@@ -86,9 +86,11 @@ class Command(BaseCommand):
         }
 
 
-        logger.info('read_streams finding alert_steams...')
-        for alert_stream in alertstream.get_default_alert_streams():
-            logger.info(f'read_streams alert_steam: {alert_stream}')
+        logger.info('read_streams finding alert_streams...')
+        for alert_stream in get_default_alert_streams():
+            logger.info(f'read_streams listening to alert_stream: {alert_stream._get_stream_classname()}')
+            alert_stream.listen()
+            logger.warning(f'*** Returned from {alert_stream._get_stream_classname()}')
 
 
         # instanciate the Stream in a way that sets the io.StartPosition
