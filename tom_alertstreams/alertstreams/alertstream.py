@@ -44,11 +44,9 @@ class AlertStream(abc.ABC):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
         # filter the kwargs by allowed keys and add them as properties to AlertStream instance
-        allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPICS']
-        self.__dict__.update((k.lower(), v) for k, v in kwargs.items() if k in allowed_keys)
+        self.__dict__.update((k.lower(), v) for k, v in kwargs.items() if k in self.allowed_keys)
 
-        required_keys = ['URL']
-        missing_keys = set(required_keys) - set(kwargs.keys())
+        missing_keys = set(self.required_keys) - set(kwargs.keys())
         if missing_keys:
             msg = (
                 f'The following required keys are missing from the configuration OPTIONS of '
@@ -66,7 +64,12 @@ class AlertStream(abc.ABC):
 class HopskotchAlertStream(AlertStream):
     """
     """
+    required_keys = ['URL', 'USERNAME', 'PASSWORD']
+    allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPICS']
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
 
+    required_keys = ['USERNAME', 'PASSWORD']
+    allowed_keys = ['USERNAME', 'PASSWORD', 'TOPICS']
