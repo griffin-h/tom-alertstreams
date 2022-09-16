@@ -157,6 +157,7 @@ ALERT_STREAMS = [
         'NAME': 'tom_alertstreams.alertstreams.alertstream.HopskotchAlertStream',
         # 'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
         'OPTIONS' : {
+            'ACTIVE': True,
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
