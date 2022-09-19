@@ -152,9 +152,9 @@ logging.config.dictConfig(LOGGING)
 
 ALERT_STREAMS = [
     {
+        'ACTIVE': False,
         'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
         'OPTIONS' : {
-            'ACTIVE': True,
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
@@ -168,8 +168,8 @@ ALERT_STREAMS = [
     # TODO: implement for generality
     {
         'NAME': 'tom_alertstreams.alertstreams.gcn.GCNAlertStream',
+        'ACTIVE': True,
         'OPTIONS': {
-            'ACTIVE': False,
         },
     }
 ]

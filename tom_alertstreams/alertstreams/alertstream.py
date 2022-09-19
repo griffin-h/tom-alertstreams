@@ -25,7 +25,7 @@ def get_alert_streams(alert_stream_configs: list):
     """
     alert_streams = [] # build and return this list of AlertStream subclass instances
     for alert_stream_config in alert_stream_configs:
-        if not alert_stream_config['OPTIONS'].get('ACTIVE', True):
+        if not alert_stream_config.get('ACTIVE', True):
             logger.debug(f'get_alert_streams - ignoring inactive stream: {alert_stream_config["NAME"]}')
             continue  # skip configs that are not active; default to ACTIVE
         try:
