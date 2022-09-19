@@ -2,6 +2,8 @@ from  datetime import datetime, timezone
 import logging
 import os
 
+from django.core.exceptions import ImproperlyConfigured
+
 from hop import Stream
 from hop.auth import Auth
 from hop.models import JSONBlob
@@ -10,7 +12,7 @@ from hop.io import Metadata, StartPosition
 from tom_alertstreams.alertstreams.alertstream import AlertStream
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
 
 
 class HopskotchAlertStream(AlertStream):
@@ -43,6 +45,10 @@ class HopskotchAlertStream(AlertStream):
     def get_stream_url(self) -> str:
         """For Hopskotch, topics are specified on the url. So, this
         method gets a base url (from super) and then adds topics to it.
+
+        You might not need a method like this if your Kafka client provides
+        alternative ways to subscribe to a topic. For example, the gcn_kafka.Consumer
+        class provides a 'substribe([list of topics])' method. (see gcn.py).
         """
         base_stream_url =  super().get_stream_url()
 
@@ -62,6 +68,7 @@ class HopskotchAlertStream(AlertStream):
     def get_stream(self, start_position=StartPosition.LATEST) -> Stream:
         hop_auth = Auth(self.username, self.password)
 
+        # TODO: allow StartPosition to be set from OPTIONS configuration dictionary
         stream = Stream(auth=hop_auth, start_at=start_position)
         return stream
 

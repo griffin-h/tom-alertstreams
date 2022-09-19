@@ -91,6 +91,6 @@ class AlertStream(abc.ABC):
     @abc.abstractmethod
     def listen(self):
         """Listen at the steam and dispatch alerts to handlers. Subclass extentions of
-        this method is not expected to return.
+        this method are not expected to return.
         """
         pass
