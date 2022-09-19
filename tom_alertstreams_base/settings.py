@@ -152,10 +152,7 @@ logging.config.dictConfig(LOGGING)
 
 ALERT_STREAMS = [
     {
-        # TODO: refactor HopskotchAlertStream to alertstreams.hopskotch.py
-
-        'NAME': 'tom_alertstreams.alertstreams.alertstream.HopskotchAlertStream',
-        # 'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
+        'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
         'OPTIONS' : {
             'ACTIVE': True,
             'URL': 'kafka://kafka.scimma.org/',
