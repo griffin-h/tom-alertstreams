@@ -152,7 +152,7 @@ logging.config.dictConfig(LOGGING)
 
 ALERT_STREAMS = [
     {
-        'ACTIVE': False,
+        'ACTIVE': True,
         'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
         'OPTIONS' : {
             'URL': 'kafka://kafka.scimma.org/',
@@ -166,7 +166,7 @@ ALERT_STREAMS = [
         },
     },
     {
-        'ACTIVE': True,
+        'ACTIVE': False,
         'NAME': 'tom_alertstreams.alertstreams.gcn.GCNClassicAlertStream',
         # The keys of the OPTIONS dictionary become (lower-case) properties of the AlertStream instance.
         'OPTIONS': {
