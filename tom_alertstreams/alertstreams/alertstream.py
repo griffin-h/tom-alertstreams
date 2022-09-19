@@ -5,8 +5,6 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 
-from gcn_kafka import Consumer
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -96,44 +94,3 @@ class AlertStream(abc.ABC):
         this method is not expected to return.
         """
         pass
-
-
-
-class GCNClassicAlertStream(AlertStream):
-    """
-
-    Pre-requisite: visit gcn.nasa.gov and sign-up.
-    """
-    required_keys = ['USERNAME', 'PASSWORD']
-    allowed_keys = ['USERNAME', 'PASSWORD', 'TOPICS']
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-    def sample_code(self):
-        # Connect as a consumer.
-        # Warning: don't share the client secret with others.
-        consumer = Consumer(client_id='get from settings',
-                            client_secret='get from settings')
-        # TODO: get client_id and client_secret from settings
-
-        # Subscribe to topics and receive alerts
-        # TODO: transfer these topics in to settings
-        topics = [
-            'gcn.classic.text.LVC_COUNTERPART',
-            'gcn.classic.text.LVC_EARLY_WARNING',
-            'gcn.classic.text.LVC_INITIAL',
-            'gcn.classic.text.LVC_PRELIMINARY',
-            'gcn.classic.text.LVC_RETRACTION',
-            'gcn.classic.text.LVC_TEST',
-            'gcn.classic.text.LVC_UPDATE'
-        ]
-        # TODO: set up ALERT_HANDLER dispatch dict and methods for these topics
-
-        consumer.subscribe(topics)
-
-        # TODO: move this into a base-class defined method
-        while True:
-            for message in consumer.consume():
-                value = message.value()
-                print(value)

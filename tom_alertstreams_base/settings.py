@@ -165,11 +165,25 @@ ALERT_STREAMS = [
                 ],
         },
     },
-    # TODO: implement for generality
     {
-        'NAME': 'tom_alertstreams.alertstreams.gcn.GCNAlertStream',
         'ACTIVE': True,
+        'NAME': 'tom_alertstreams.alertstreams.gcn.GCNClassicAlertStream',
+        # The keys of the OPTIONS dictionary become (lower-case) properties of the AlertStream instance.
         'OPTIONS': {
+            # see https://github.com/nasa-gcn/gcn-kafka-python#to-use for configuration details.
+            'GCN_CLASSIC_CLIENT_ID': os.getenv('GCN_CLASSIC_CLIENT_ID', None),
+            'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
+            'DOMAIN': 'gcn.nasa.gov', # optional, defaults to 'gcn.nasa.gov'
+            'CONFIG': { # optional
+                'group.id': '',  # 'tom_alertstreams - llindstrom@lco.global',
+                'auto.offset.reset': 'earliest',
+                'enable.auto.commit': False
+            },
+            'TOPICS': [
+                'gcn.classic.text.LVC_INITIAL',
+                'gcn.classic.text.LVC_PRELIMINARY',
+                'gcn.classic.text.LVC_RETRACTION',
+             ]
         },
     }
 ]
