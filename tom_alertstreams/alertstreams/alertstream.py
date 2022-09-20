@@ -58,10 +58,9 @@ class AlertStream(abc.ABC):
     2. implement listen()
        this method probably doesn't return
     3. write your alert_handlers. which proably take and alert do something.
-       the HopskotchAlertStreamClass defines a dictionary keyed by topic with
-       callable values (i.e call this method with alerts from this topic). You
-       may want that, too.
-    4.
+       The HopskotchAlertStream.listen() method defines an 'alert_handlers' dictionary keyed by
+       alert topic with callable values (i.e call this method with alerts from this topic).
+       The GCNClassicAlertStream.listen() is another example.
     """
 
     def __init__(self, *args, **kwargs) -> None:
