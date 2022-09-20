@@ -33,7 +33,7 @@ class HopskotchAlertStream(AlertStream):
         alternative ways to subscribe to a topic. For example, the gcn_kafka.Consumer
         class provides a 'substribe([list of topics])' method. (see gcn.py).
         """
-        base_stream_url =  super().get_stream_url()
+        base_stream_url =  self.url
 
         # if not present, add trailing slash to base_stream url
         # so, comma-separated topics can be appeneded.
