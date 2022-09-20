@@ -12,27 +12,38 @@ from hop.io import Metadata, StartPosition
 from tom_alertstreams.alertstreams.alertstream import AlertStream
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 
 class HopskotchAlertStream(AlertStream):
     """
     """
-    required_keys = ['URL', 'USERNAME', 'PASSWORD']
+    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPICS']
     allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPICS']
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        # the following methods may fail if improperly configured.
+        # So, do them now to catch any errors, before listen() is spawned in it's own Process.
+        self.stream_url = self.get_stream_url()
+        self.stream = self.get_stream()
 
 
     def get_stream_url(self) -> str:
         """For Hopskotch, topics are specified on the url. So, this
         method gets a base url (from super) and then adds topics to it.
 
+        Hopskotch (hop.io) requires at least one topic to be specified.
+
         You might not need a method like this if your Kafka client provides
         alternative ways to subscribe to a topic. For example, the gcn_kafka.Consumer
         class provides a 'substribe([list of topics])' method. (see gcn.py).
         """
+        logger.debug(f'HopskotchAlertStream.get_stream_url topics: {self.topics}')
+        if self.topics == []:
+            msg = 'Hopskotch requires at least one topic to open the stream. Check ALERT_STREAMS in settings.py'
+            raise ImproperlyConfigured(msg)
+
         base_stream_url =  self.url
 
         # if not present, add trailing slash to base_stream url
@@ -74,11 +85,7 @@ class HopskotchAlertStream(AlertStream):
             'sys.heartbeat': self._heartbeat_handler
         }
 
-        stream_url: str = self.get_stream_url()
-        logger.debug(f'opening Hopskotch URL: {stream_url}')
-
-        stream: Stream = self.get_stream()
-        with stream.open(stream_url, 'r') as src:
+        with self.stream.open(self.stream_url, 'r') as src:
             for alert, metadata in src.read(metadata=True):
                 # type(gcn_circular) is <hop.models.GNCCircular>
                 # type(metadata) is <hop.io.Metadata>
