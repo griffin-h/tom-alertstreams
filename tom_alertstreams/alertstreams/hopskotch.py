@@ -103,9 +103,10 @@ class HopskotchAlertStream(AlertStream):
     def _heartbeat_handler(self, heartbeat: JSONBlob,  metadata: Metadata):
         content: dict = heartbeat.content # see hop_client reatthedocs
         timestamp = datetime.fromtimestamp(content["timestamp"]/1e6, tz=timezone.utc)
-        logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}')
-        logging.info(f'{timestamp.isoformat()} heartbeat JSONBlob: {heartbeat}')
-        logging.info(f'{timestamp.isoformat()} metadata: {metadata}')
+        if heartbeat.content['count'] % 1000 == 0:
+            logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}')
+            #logging.info(f'{timestamp.isoformat()} heartbeat JSONBlob: {heartbeat}')
+            #logging.info(f'{timestamp.isoformat()} metadata: {metadata}')
 
 
 

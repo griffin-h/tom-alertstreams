@@ -166,7 +166,7 @@ ALERT_STREAMS = [
         },
     },
     {
-        'ACTIVE': False,
+        'ACTIVE': True,
         'NAME': 'tom_alertstreams.alertstreams.gcn.GCNClassicAlertStream',
         # The keys of the OPTIONS dictionary become (lower-case) properties of the AlertStream instance.
         'OPTIONS': {
@@ -175,9 +175,9 @@ ALERT_STREAMS = [
             'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
             'DOMAIN': 'gcn.nasa.gov', # optional, defaults to 'gcn.nasa.gov'
             'CONFIG': { # optional
-                'group.id': '',  # 'tom_alertstreams - llindstrom@lco.global',
-                'auto.offset.reset': 'earliest',
-                'enable.auto.commit': False
+                #'group.id': 'tom_alertstreams - llindstrom@lco.global',
+                #'auto.offset.reset': 'earliest',
+                #'enable.auto.commit': False
             },
             'TOPICS': [
                 'gcn.classic.text.LVC_INITIAL',
