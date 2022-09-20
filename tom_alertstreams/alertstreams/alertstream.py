@@ -83,9 +83,6 @@ class AlertStream(abc.ABC):
     def _get_stream_classname(self) -> str:
         return type(self).__qualname__
 
-    def get_stream_url(self) -> str:
-        return self.url
-
 
     @abc.abstractmethod
     def listen(self):
