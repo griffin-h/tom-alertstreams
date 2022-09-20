@@ -25,23 +25,6 @@ class HopskotchAlertStream(AlertStream):
         super().__init__(*args, **kwargs)
 
 
-    def _get_hop_authentication(self) -> Auth:
-        """Get username and password and configure Hop client authentication
-
-        Get SCIMMA_AUTH_USERNAME and SCIMMA_AUTH_PASSWORD from environment.
-        """
-        username = os.getenv('SCIMMA_AUTH_USERNAME', None)
-        password = os.getenv('SCIMMA_AUTH_PASSWORD', None)
-
-        if username is None or password is None:
-            error_message = ('Supply SCiMMA Auth Hopskotch credentials on command line or '
-                             'set SCIMMA_AUTH_USERNAME and SCIMMA_AUTH_PASSWORD environment variables.')
-            logger.error(error_message)
-            raise ImproperlyConfigured(error_message)
-
-        return Auth(username, password)
-
-
     def get_stream_url(self) -> str:
         """For Hopskotch, topics are specified on the url. So, this
         method gets a base url (from super) and then adds topics to it.
