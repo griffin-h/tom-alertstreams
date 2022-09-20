@@ -59,6 +59,13 @@ class HopskotchAlertStream(AlertStream):
     def listen(self):
         super().listen()
 
+        # TODO: Provide example of making this a collections.defaultdict with a
+        # default_factory which handles unexpected topics nicely. 
+
+        # TODO: alternatively, WARN upon OPTIONS['topics'] extries that don't have
+        # handlers in the alert_handler. (i.e they've configured a topic subscription
+        # without providing a handler for the topic. So, warn them).
+
         # map from topic to alert parser/db-updater for that topic
         alert_handler = {
             #'gcn.circular': self._update_db_with_gcn_circular,
