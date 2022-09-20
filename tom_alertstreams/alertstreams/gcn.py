@@ -20,11 +20,6 @@ class GCNClassicAlertStream(AlertStream):
     required_keys = ['GCN_CLASSIC_CLIENT_ID', 'GCN_CLASSIC_CLIENT_SECRET']
     allowed_keys = ['GCN_CLASSIC_CLIENT_ID', 'GCN_CLASSIC_CLIENT_SECRET', 'TOPICS', 'DOMAIN', 'CONFIG']
 
-    alert_handler = {
-        'gcn.classic.text.LVC_INITIAL': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
-        'gcn.classic.text.LVC_PRELIMINARY': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
-        'gcn.classic.text.LVC_RETRACTION': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
-    }
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -45,11 +40,17 @@ class GCNClassicAlertStream(AlertStream):
         #for topic in consumer.list_topics().topics:
         #    logger.debug(f'topic: {topic}')
 
+        alert_handler = {
+            'gcn.classic.text.LVC_INITIAL': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
+            'gcn.classic.text.LVC_PRELIMINARY': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
+            'gcn.classic.text.LVC_RETRACTION': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
+        }
+
         while True:
             for message in consumer.consume():
                 message_topic = message.topic()
                 try:
-                    self.alert_handler[message_topic](message)
+                    alert_handler[message_topic](message)
                 except KeyError as err:
                     logger.error(f'alert from topic {message_topic} received but no handler defined')
 
