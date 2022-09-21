@@ -21,7 +21,7 @@ def get_alert_streams(alert_stream_configs: list):
 
     Use get_default_alert_streams() if you want the AlertStreams configured in settings.py.
     """
-    alert_streams = [] # build and return this list of AlertStream subclass instances
+    alert_streams = []  # build and return this list of AlertStream subclass instances
     for alert_stream_config in alert_stream_configs:
         if not alert_stream_config.get('ACTIVE', True):
             logger.debug(f'get_alert_streams - ignoring inactive stream: {alert_stream_config["NAME"]}')
@@ -39,7 +39,6 @@ def get_alert_streams(alert_stream_configs: list):
         alert_streams.append(alert_stream)
 
     return alert_streams
-
 
 
 class AlertStream(abc.ABC):
@@ -79,10 +78,8 @@ class AlertStream(abc.ABC):
             )
             raise ImproperlyConfigured(msg)
 
-
     def _get_stream_classname(self) -> str:
         return type(self).__qualname__
-
 
     @abc.abstractmethod
     def listen(self):

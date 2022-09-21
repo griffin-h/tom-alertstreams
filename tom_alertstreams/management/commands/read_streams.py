@@ -8,7 +8,7 @@ from tom_alertstreams.alertstreams.alertstream import get_default_alert_streams
 
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
 logger.setLevel(logging.INFO)
 
 class Command(BaseCommand):
@@ -29,7 +29,8 @@ class Command(BaseCommand):
             for alert_stream in alert_streams:
                 t = Thread(target=alert_stream.listen, name=alert_stream._get_stream_classname())
                 t.start()
-                logger.info(f'read_streams {alert_stream._get_stream_classname()} TID={t.native_id} ; thread identifier={t.ident}')
+                logger.info((f'read_streams {alert_stream._get_stream_classname()} TID={t.native_id} ; '
+                             f'thread identifier={t.ident}'))
         except KeyboardInterrupt as msg:
             logger.info(f'read_streams handling KeyboardInterupt {msg}')
 

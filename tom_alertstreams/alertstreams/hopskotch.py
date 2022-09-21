@@ -1,6 +1,5 @@
-from  datetime import datetime, timezone
+from datetime import datetime, timezone
 import logging
-import os
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -28,7 +27,6 @@ class HopskotchAlertStream(AlertStream):
         self.stream_url = self.get_stream_url()
         self.stream = self.get_stream()
 
-
     def get_stream_url(self) -> str:
         """For Hopskotch, topics are specified on the url. So, this
         method gets a base url (from super) and then adds topics to it.
@@ -44,7 +42,7 @@ class HopskotchAlertStream(AlertStream):
             msg = 'Hopskotch requires at least one topic to open the stream. Check ALERT_STREAMS in settings.py'
             raise ImproperlyConfigured(msg)
 
-        base_stream_url =  self.url
+        base_stream_url = self.url
 
         # if not present, add trailing slash to base_stream url
         # so, comma-separated topics can be appeneded.
@@ -58,7 +56,6 @@ class HopskotchAlertStream(AlertStream):
         logger.debug(f'HopskotchAlertStream.get_stream_url url: {hopskotch_stream_url}')
         return hopskotch_stream_url
 
-
     def get_stream(self, start_position=StartPosition.LATEST) -> Stream:
         hop_auth = Auth(self.username, self.password)
 
@@ -66,12 +63,11 @@ class HopskotchAlertStream(AlertStream):
         stream = Stream(auth=hop_auth, start_at=start_position)
         return stream
 
-
     def listen(self):
         super().listen()
 
         # TODO: Provide example of making this a collections.defaultdict with a
-        # default_factory which handles unexpected topics nicely. 
+        # default_factory which handles unexpected topics nicely.
 
         # TODO: alternatively, WARN upon OPTIONS['topics'] extries that don't have
         # handlers in the alert_handler. (i.e they've configured a topic subscription
@@ -79,9 +75,9 @@ class HopskotchAlertStream(AlertStream):
 
         # map from topic to alert parser/db-updater for that topic
         alert_handler = {
-            #'gcn.circular': self._update_db_with_gcn_circular,
-            #'tomtoolkit.test': self._update_db_with_hermes_alert,
-            #'hermes.test': self._update_db_with_hermes_alert,
+            # 'gcn.circular': self._update_db_with_gcn_circular,
+            # 'tomtoolkit.test': self._update_db_with_hermes_alert,
+            # 'hermes.test': self._update_db_with_hermes_alert,
             'sys.heartbeat': self._heartbeat_handler
         }
 
@@ -95,15 +91,13 @@ class HopskotchAlertStream(AlertStream):
                     logger.error(f'alert from topic {metadata.topic} received but no handler defined')
                     # TODO: should define a default handler for all unhandeled topics
 
-
-
-    def _heartbeat_handler(self, heartbeat: JSONBlob,  metadata: Metadata):
-        content: dict = heartbeat.content # see hop_client reatthedocs
-        timestamp = datetime.fromtimestamp(content["timestamp"]/1e6, tz=timezone.utc)
+    def _heartbeat_handler(self, heartbeat: JSONBlob, metadata: Metadata):
+        content: dict = heartbeat.content  # see hop_client reatthedocs
+        timestamp = datetime.fromtimestamp(content["timestamp"] / 1e6, tz=timezone.utc)
         if heartbeat.content['count'] % 300 == 0:
             logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}')
-            #logging.info(f'{timestamp.isoformat()} heartbeat JSONBlob: {heartbeat}')
-            #logging.info(f'{timestamp.isoformat()} metadata: {metadata}')
+            # logging.info(f'{timestamp.isoformat()} heartbeat JSONBlob: {heartbeat}')
+            # logging.info(f'{timestamp.isoformat()} metadata: {metadata}')
 
 
 

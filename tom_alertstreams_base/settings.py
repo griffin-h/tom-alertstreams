@@ -136,9 +136,9 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        #'level': 'WARNING',
+        # 'level': 'WARNING',
         'level': 'INFO',
-        #'level': 'DEBUG',
+        # 'level': 'DEBUG',
     },
     'loggers': {
         'django': {
@@ -154,7 +154,7 @@ ALERT_STREAMS = [
     {
         'ACTIVE': True,
         'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
-        'OPTIONS' : {
+        'OPTIONS': {
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
@@ -162,7 +162,7 @@ ALERT_STREAMS = [
                 'sys.heartbeat',
                 'tomtoolkit.test',
                 'hermes.test'
-                ],
+            ],
         },
     },
     {
@@ -173,17 +173,17 @@ ALERT_STREAMS = [
             # see https://github.com/nasa-gcn/gcn-kafka-python#to-use for configuration details.
             'GCN_CLASSIC_CLIENT_ID': os.getenv('GCN_CLASSIC_CLIENT_ID', None),
             'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
-            'DOMAIN': 'gcn.nasa.gov', # optional, defaults to 'gcn.nasa.gov'
-            'CONFIG': { # optional
-                #'group.id': 'tom_alertstreams - llindstrom@lco.global',
-                #'auto.offset.reset': 'earliest',
-                #'enable.auto.commit': False
+            'DOMAIN': 'gcn.nasa.gov',  # optional, defaults to 'gcn.nasa.gov'
+            'CONFIG': {  # optional
+                # 'group.id': 'tom_alertstreams - llindstrom@lco.global',
+                # 'auto.offset.reset': 'earliest',
+                # 'enable.auto.commit': False
             },
             'TOPICS': [
                 'gcn.classic.text.LVC_INITIAL',
                 'gcn.classic.text.LVC_PRELIMINARY',
                 'gcn.classic.text.LVC_RETRACTION',
-             ]
+            ]
         },
     }
 ]
