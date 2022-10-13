@@ -150,6 +150,9 @@ LOGGING = {
 }
 logging.config.dictConfig(LOGGING)
 
+#
+# tom_alertstreams configuration
+#
 ALERT_STREAMS = [
     {
         'ACTIVE': True,
@@ -158,11 +161,11 @@ ALERT_STREAMS = [
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
-            'TOPICS': [
-                'sys.heartbeat',
-                'tomtoolkit.test',
-                'hermes.test'
-            ],
+            'TOPICS': {
+                'sys.heartbeat': (lambda x: print(x)),
+                'tomtoolkit.test': (lambda x: print(x)),
+                'hermes.test': (lambda x: print(x)),
+            },
         },
     },
     {
@@ -179,11 +182,11 @@ ALERT_STREAMS = [
                 # 'auto.offset.reset': 'earliest',
                 # 'enable.auto.commit': False
             },
-            'TOPICS': [
-                'gcn.classic.text.LVC_INITIAL',
-                'gcn.classic.text.LVC_PRELIMINARY',
-                'gcn.classic.text.LVC_RETRACTION',
-            ]
+            'TOPICS': {
+                'gcn.classic.text.LVC_INITIAL': (lambda x: print(x)),
+                'gcn.classic.text.LVC_PRELIMINARY': (lambda x: print(x)),
+                'gcn.classic.text.LVC_RETRACTION': (lambda x: print(x)),
+            },
         },
     }
 ]
