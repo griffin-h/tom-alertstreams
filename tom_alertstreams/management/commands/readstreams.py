@@ -15,8 +15,8 @@ class Command(BaseCommand):
     help = 'Consume alerts from the alert streams configured in the settings.py ALERT_STREAMS'
 
     def handle(self, *args, **options):
-        logger.debug(f'read_streams.Command.handle() args: {args}')
-        logger.debug(f'read_streams.Command.handle() options: {options}')
+        logger.debug(f'readstreams.Command.handle() args: {args}')
+        logger.debug(f'readstreams.Command.handle() options: {options}')
 
         try:
             alert_streams = get_default_alert_streams()
@@ -34,4 +34,4 @@ class Command(BaseCommand):
         except KeyboardInterrupt as msg:
             logger.info(f'read_streams handling KeyboardInterupt {msg}')
 
-        logger.info('read_streams Command.handle() returning...')
+        logger.info('readstreams Command.handle() returning...')
