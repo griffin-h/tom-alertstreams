@@ -17,8 +17,8 @@ logger.setLevel(logging.DEBUG)
 class HopskotchAlertStream(AlertStream):
     """
     """
-    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPICS']
-    allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPICS']
+    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLER']
+    allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLER']
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -37,8 +37,8 @@ class HopskotchAlertStream(AlertStream):
         alternative ways to subscribe to a topic. For example, the gcn_kafka.Consumer
         class provides a 'substribe([list of topics])' method. (see gcn.py).
         """
-        logger.debug(f'HopskotchAlertStream.get_stream_url topics: {self.topics}')
-        if self.topics == []:
+        logger.debug(f'HopskotchAlertStream.get_stream_url topics: {list(self.topic_handler.keys())}')
+        if self.topic_handler == {}:
             msg = 'Hopskotch requires at least one topic to open the stream. Check ALERT_STREAMS in settings.py'
             raise ImproperlyConfigured(msg)
 
@@ -50,7 +50,7 @@ class HopskotchAlertStream(AlertStream):
             base_stream_url += '/'
 
         # append comma-separated topics to base URL
-        topics = ','.join(self.topics)  # 'topic1,topic2,topic3'
+        topics = ','.join(list(self.topic_handler.keys()))  # 'topic1,topic2,topic3'
         hopskotch_stream_url = base_stream_url + topics
 
         logger.debug(f'HopskotchAlertStream.get_stream_url url: {hopskotch_stream_url}')
@@ -78,7 +78,7 @@ class HopskotchAlertStream(AlertStream):
                 # type(gcn_circular) is <hop.models.GNCCircular>
                 # type(metadata) is <hop.io.Metadata>
                 try:
-                    self.topics[metadata.topic](alert)
+                    self.topic_handler[metadata.topic](alert)
                 except KeyError as err:
                     logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
                     # TODO: should define a default handler for all unhandeled topics

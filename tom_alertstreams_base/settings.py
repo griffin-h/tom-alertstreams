@@ -161,7 +161,7 @@ ALERT_STREAMS = [
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
-            'TOPICS': {
+            'TOPIC_HANDLER': {
                 'sys.heartbeat': (lambda x: print(x)),
                 'tomtoolkit.test': (lambda x: print(x)),
                 'hermes.test': (lambda x: print(x)),
@@ -182,7 +182,7 @@ ALERT_STREAMS = [
                 # 'auto.offset.reset': 'earliest',
                 # 'enable.auto.commit': False
             },
-            'TOPICS': {
+            'TOPIC_HANDLER': {
                 'gcn.classic.text.LVC_INITIAL': (lambda x: print(x)),
                 'gcn.classic.text.LVC_PRELIMINARY': (lambda x: print(x)),
                 'gcn.classic.text.LVC_RETRACTION': (lambda x: print(x)),
