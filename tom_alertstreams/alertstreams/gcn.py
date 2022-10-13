@@ -33,24 +33,18 @@ class GCNClassicAlertStream(AlertStream):
                             config=self.config,
                             )
 
-        consumer.subscribe(self.topics)
+        consumer.subscribe(list(self.topics.keys()))
 
         # logger.debug(f'Here is a list of the available topics for {self.domain}')
         # for topic in consumer.list_topics().topics:
         #     logger.debug(f'topic: {topic}')
 
-        alert_handler = {
-            'gcn.classic.text.LVC_INITIAL': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
-            'gcn.classic.text.LVC_PRELIMINARY': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
-            'gcn.classic.text.LVC_RETRACTION': (lambda x: logger.info(f'{x.topic()} {x.value()}')),
-        }
-
         while True:
             for message in consumer.consume():
                 message_topic = message.topic()
                 try:
-                    alert_handler[message_topic](message)
+                    self.topics[message_topic](message)
                 except KeyError as err:
-                    logger.error(f'alert from topic {message_topic} received but no handler defined')
+                    logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
 
         consumer.close()

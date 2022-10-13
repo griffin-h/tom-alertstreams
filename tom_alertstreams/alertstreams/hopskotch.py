@@ -73,22 +73,14 @@ class HopskotchAlertStream(AlertStream):
         # handlers in the alert_handler. (i.e they've configured a topic subscription
         # without providing a handler for the topic. So, warn them).
 
-        # map from topic to alert parser/db-updater for that topic
-        alert_handler = {
-            # 'gcn.circular': self._update_db_with_gcn_circular,
-            # 'tomtoolkit.test': self._update_db_with_hermes_alert,
-            # 'hermes.test': self._update_db_with_hermes_alert,
-            'sys.heartbeat': self._heartbeat_handler
-        }
-
         with self.stream.open(self.stream_url, 'r') as src:
             for alert, metadata in src.read(metadata=True):
                 # type(gcn_circular) is <hop.models.GNCCircular>
                 # type(metadata) is <hop.io.Metadata>
                 try:
-                    alert_handler[metadata.topic](alert, metadata)
+                    self.topics[metadata.topic](alert)
                 except KeyError as err:
-                    logger.error(f'alert from topic {metadata.topic} received but no handler defined')
+                    logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
                     # TODO: should define a default handler for all unhandeled topics
 
     def _heartbeat_handler(self, heartbeat: JSONBlob, metadata: Metadata):
