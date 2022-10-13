@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "tom-alertstreams"
+version = "0.1.0"
+description = "Reusable TOMToolkit app for listening to kafka streams."
+authors = ["TOM Toolkit Project <tomtoolkit@lco.global>", "Lindy Lindstrom <llindstrom@lco.global>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/TOMToolkit/tom-alertstreams"
+keywords = ["tomtoolkit", "astronomy", "astrophysics", "cosmology", "science"]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.1",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics"
+]
+
+packages = [
+    { include = "tom_alertstreams" }
+]
+
+[tool.setuptools_scm]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+tomtoolkit = "^2.10"
+psycopg2-binary = "^2.9"
+gcn-kafka = "^0.2"
+hop-client = "^0.7"
+
+[tool.poetry.dev-dependencies]
+coverage = "^6.3.2"
+factory_boy = "^3.1.0"
+pytest = "^3.0.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "setuptools>=45", "setuptools_scm[toml]>=6.2"]
+build-backend = "poetry.core.masonry.api"
