@@ -12,7 +12,12 @@ logger.setLevel(logging.DEBUG)
 def get_default_alert_streams():
     """Return the AlertStreams configured in settings.py
     """
-    return get_alert_streams(settings.ALERT_STREAMS)
+    try:
+        alert_streams = get_alert_streams(settings.ALERT_STREAMS)
+    except AttributeError as err:
+        raise ImproperlyConfigured(err)
+
+    return alert_streams
 
 
 def get_alert_streams(alert_stream_configs: list):

@@ -20,8 +20,8 @@ class Command(BaseCommand):
 
         try:
             alert_streams = get_default_alert_streams()
-        except ImproperlyConfigured as err:
-            logger.error(err)
+        except ImproperlyConfigured as ex:
+            logger.error(f'{ex.__class__.__name__}: Configure your alert streams in a settings.py ALERT_STREAM list: {ex}')
             exit(1)
 
         try:
