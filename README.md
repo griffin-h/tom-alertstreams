@@ -97,21 +97,20 @@ instance.
 
 ## Alert Handling
 
-Let's assume that an `AlertStream` subclass exists for the Kafka stream of interest.
-The keys of the `TOPIC_HANDLERS` dictionary are the topics subscribed to. The values of the `TOPIC_HANDLERS`
-dictionary specify alert handling methods that will be imported and called for each alert recieved
-on that topic. An example is provided, `tom_alerts.alertstreams.alertstream.alert_logger`, which simply logs
-the alert.
+Assuming that an `AlertStream` subclass exists for the Kafka stream of interest,
+the keys of the `TOPIC_HANDLERS` dictionary are the topics that will be subscribed to. The values
+of the `TOPIC_HANDLERS` dictionary specify alert handling methods that will be imported and called
+for each alert recieved on that topic. An example is provided,
+`tom_alerts.alertstreams.alertstream.alert_logger`, which simply logs the alert.
 
 To customize this behaviour according to the needs of your TOM, define an alert handling function for each
 topic that you wish to subscribe to. Your `TOPIC_HANDLERS` dictionary will have a an entry for each topic
-whose key is the topic name and whose value is the dot-path to the alert handling function. When the
-`AlertStream` subclass is instanciated, the `OPTIONS` dictionary is read and and `alert_handler` dictionary
-is created. It is keyed by topic name and it's values are the imported callable functions specified by the
-dot-path. `readstreams` will calls the alert handler for each alert that comes in on the topic. The signiture
+whose key is the topic name and whose value is a string indicating the dot-path to the alert handling function.
+When the `AlertStream` subclass is instanciated, the `OPTIONS` dictionary is read and an `alert_handler`
+dictionary is created. It is keyed by topic name and it's values are the imported callable functions specified by the
+dot-path strings. `readstreams` will call the alert handler for each alert that comes in on the topic. The signiture
 of the alert handling function is specific to the `AlertStream` subclasss.
 
-documentation coming.
 ## Subclassing `AlertStream`
 
 documentation coming.
