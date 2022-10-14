@@ -17,8 +17,8 @@ logger.setLevel(logging.DEBUG)
 class HopskotchAlertStream(AlertStream):
     """
     """
-    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLER']
-    allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLER']
+    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
+    allowed_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -37,8 +37,8 @@ class HopskotchAlertStream(AlertStream):
         alternative ways to subscribe to a topic. For example, the gcn_kafka.Consumer
         class provides a 'substribe([list of topics])' method. (see gcn.py).
         """
-        logger.debug(f'HopskotchAlertStream.get_stream_url topics: {list(self.topic_handler.keys())}')
-        if self.topic_handler == {}:
+        logger.debug(f'HopskotchAlertStream.get_stream_url topics: {list(self.topic_handlers.keys())}')
+        if self.topic_handlers == {}:
             msg = 'Hopskotch requires at least one topic to open the stream. Check ALERT_STREAMS in settings.py'
             raise ImproperlyConfigured(msg)
 
@@ -50,7 +50,7 @@ class HopskotchAlertStream(AlertStream):
             base_stream_url += '/'
 
         # append comma-separated topics to base URL
-        topics = ','.join(list(self.topic_handler.keys()))  # 'topic1,topic2,topic3'
+        topics = ','.join(list(self.topic_handlers.keys()))  # 'topic1,topic2,topic3'
         hopskotch_stream_url = base_stream_url + topics
 
         logger.debug(f'HopskotchAlertStream.get_stream_url url: {hopskotch_stream_url}')
@@ -78,7 +78,8 @@ class HopskotchAlertStream(AlertStream):
                 # type(gcn_circular) is <hop.models.GNCCircular>
                 # type(metadata) is <hop.io.Metadata>
                 try:
-                    self.topic_handler[metadata.topic](alert)
+                    # TODO: should probably use *args, **kwargs to pass unknow number of arguments
+                    self.message_handler[metadata.topic](alert, metadata)
                 except KeyError as err:
                     logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
                     # TODO: should define a default handler for all unhandeled topics
@@ -92,4 +93,9 @@ class HopskotchAlertStream(AlertStream):
             # logging.info(f'{timestamp.isoformat()} metadata: {metadata}')
 
 
+def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
+    content: dict = heartbeat.content  # see hop_client reatthedocs
+    timestamp = datetime.fromtimestamp(content["timestamp"] / 1e6, tz=timezone.utc)
+    if True or heartbeat.content['count'] % 300 == 0:
+        logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}. metadata: {metadata}')
 

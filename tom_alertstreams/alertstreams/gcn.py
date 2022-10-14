@@ -17,8 +17,8 @@ class GCNClassicAlertStream(AlertStream):
     """
     # Upon __init__, the AlertStream base class creates instance properties from
     # the settings OPTIONS dictionary, converting the keys to lowercase.
-    required_keys = ['GCN_CLASSIC_CLIENT_ID', 'GCN_CLASSIC_CLIENT_SECRET', 'TOPIC_HANDLER']
-    allowed_keys = ['GCN_CLASSIC_CLIENT_ID', 'GCN_CLASSIC_CLIENT_SECRET', 'TOPIC_HANDLER', 'DOMAIN', 'CONFIG']
+    required_keys = ['GCN_CLASSIC_CLIENT_ID', 'GCN_CLASSIC_CLIENT_SECRET', 'TOPIC_HANDLERS']
+    allowed_keys = ['GCN_CLASSIC_CLIENT_ID', 'GCN_CLASSIC_CLIENT_SECRET', 'TOPIC_HANDLERS', 'DOMAIN', 'CONFIG']
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -43,8 +43,8 @@ class GCNClassicAlertStream(AlertStream):
             for message in consumer.consume():
                 message_topic = message.topic()
                 try:
-                    self.topic_handler[message_topic](message)
+                    self.message_handler[message_topic](message)
                 except KeyError as err:
-                    logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
+                    logger.error(f'alert from topic {message_topic} received but no handler defined. err: {err}')
 
         consumer.close()

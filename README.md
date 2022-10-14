@@ -36,7 +36,7 @@ in the output.
 
 ## Configuration
 
-Each Kafka stream that your TOM (via `readstreams` listens to will have a configuration dictionary
+Each Kafka stream that your TOM listens to (via `readstreams`) will have a configuration dictionary
 in your `settings.py` `ALERT_STREAMS`. `ALERT_STREAMS` is a list of configuration dictionaries, one
 dictionary for each Kafka stream. Here's an example `ALERT_STREAMS` configuration for two Kafka streams:
 [SCiMMA Hopskotch](https://scimma.org/hopskotch.html) and
