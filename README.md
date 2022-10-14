@@ -68,7 +68,7 @@ ALERT_STREAMS = [
             'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
             'DOMAIN': 'gcn.nasa.gov',  # optional, defaults to 'gcn.nasa.gov'
             'CONFIG': {  # optional
-                # 'group.id': 'tom_alertstreams - llindstrom@lco.global',
+                # 'group.id': 'tom_alertstreams-my-custom-group-id',
                 # 'auto.offset.reset': 'earliest',
                 # 'enable.auto.commit': False
             },
@@ -89,10 +89,27 @@ keep a configuration dictionary, but ignore the stream.
 will provide `AlertStream` subclasses for major astromical Kafka streams. See below for instructions on Subclassing
 the `AlertStream` base class.
 * `OPTIONS`: A dictionary of key-value pairs specific to the`AlertStream` subclass given by `NAME`. The doc string for
-`AlertStream` subclass should document what is expected. Typically, a URL, authentication information, and a dictionary,
-`TOPIC_HANDLERS`, will be required. See "Subclassing `AlertStream`" below.
+the `AlertStream` subclass should document what is expected. Typically, a URL, authentication information, and a
+dictionary, `TOPIC_HANDLERS`, will be required. See "Subclassing `AlertStream`" below. The `AlertStream` subclass will
+convert the key-value pairs of the `OPTIONS` dictionary into properties (and values) of the `AlertStream` subclass
+instance.
+
 
 ## Alert Handling
+
+Let's assume that an `AlertStream` subclass exists for the Kafka stream of interest.
+The keys of the `TOPIC_HANDLERS` dictionary are the topics subscribed to. The values of the `TOPIC_HANDLERS`
+dictionary specify alert handling methods that will be imported and called for each alert recieved
+on that topic. An example is provided, `tom_alerts.alertstreams.alertstream.alert_logger`, which simply logs
+the alert.
+
+To customize this behaviour according to the needs of your TOM, define an alert handling function for each
+topic that you wish to subscribe to. Your `TOPIC_HANDLERS` dictionary will have a an entry for each topic
+whose key is the topic name and whose value is the dot-path to the alert handling function. When the
+`AlertStream` subclass is instanciated, the `OPTIONS` dictionary is read and and `alert_handler` dictionary
+is created. It is keyed by topic name and it's values are the imported callable functions specified by the
+dot-path. `readstreams` will calls the alert handler for each alert that comes in on the topic. The signiture
+of the alert handling function is specific to the `AlertStream` subclasss.
 
 documentation coming.
 ## Subclassing `AlertStream`

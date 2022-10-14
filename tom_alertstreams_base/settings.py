@@ -178,7 +178,7 @@ ALERT_STREAMS = [
             'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
             'DOMAIN': 'gcn.nasa.gov',  # optional, defaults to 'gcn.nasa.gov'
             'CONFIG': {  # optional
-                # 'group.id': 'tom_alertstreams - llindstrom@lco.global',
+                # 'group.id': 'tom_alertstreams-my-custom-group-id',
                 # 'auto.offset.reset': 'earliest',
                 # 'enable.auto.commit': False
             },
