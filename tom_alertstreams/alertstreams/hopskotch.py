@@ -97,3 +97,9 @@ def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
     if heartbeat.content['count'] % 300 == 0:
         # mod 300 just for convenience so as not to flood logger
         logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}. metadata: {metadata}')
+
+
+def alert_logger(alert: JSONBlob, metadata: Metadata):
+    """Example alert handler The method signiture is specific to Hopskotch alerts
+    """
+    logger.info(f'Alert received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
