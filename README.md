@@ -94,6 +94,11 @@ dictionary, `TOPIC_HANDLERS`, will be required. See "Subclassing `AlertStream`" 
 convert the key-value pairs of the `OPTIONS` dictionary into properties (and values) of the `AlertStream` subclass
 instance.
 
+### Getting Kafka Stream Credentials
+As part of your `OPTIONS` for each Kafka stream, you need to configure access credentials. Visit these links
+to get credentials for [Hopskotch](https://hop.scimma.org/) and [GCN Classic over Kafka](https://gcn.nasa.gov/quickstart).
+Set the environment variables with the username and passwords obtained. Do not check them in to your code repository.
+
 
 ## Alert Handling
 
@@ -113,4 +118,14 @@ of the alert handling function is specific to the `AlertStream` subclasss.
 
 ## Subclassing `AlertStream`
 
-documentation coming.
+Ideally, As a TOM developer, there is already an `AlertStream`-subclass for the alert stream that you
+want your TOM to listen to. If so, you need only to configure your TOM to use it in  `settings.py`
+`ALERT_STREAMS`. If you must implement your own `AlertStream` subclass, please get in touch. In the meantime, here's a brief outline:
+
+1. Create subclass of `AlertStream`
+2. Create `required_keys` and `allowed_keys` class variables in your `AlertStream`-subclass. These are list of
+strings refering to the keys of the `OPTIONS` dictionary. The purpose of these is to help TOM developers using
+your `AlertStream`-subclass with their `ALERT_STREAMS` `OPTIONS` configuration dictionary. 
+
+
+more documentation coming.

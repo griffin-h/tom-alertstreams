@@ -163,8 +163,8 @@ ALERT_STREAMS = [
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
             'TOPIC_HANDLERS': {
                 'sys.heartbeat': 'tom_alertstreams.alertstreams.hopskotch.heartbeat_handler',
-                'tomtoolkit.test': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
-                'hermes.test': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'tomtoolkit.test': 'tom_alertstreams.alertstreams.hopskotch.alert_logger',
+                'hermes.test': 'tom_alertstreams.alertstreams.hopskotch.alert_logger',
             },
         },
     },
@@ -186,6 +186,7 @@ ALERT_STREAMS = [
                 'gcn.classic.text.LVC_INITIAL': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
                 'gcn.classic.text.LVC_PRELIMINARY': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
                 'gcn.classic.text.LVC_RETRACTION': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'gcn.classic.text.LVC_TEST': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
             },
         },
     }
