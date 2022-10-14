@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 # logger.setLevel(logging.DEBUG)
 logger.setLevel(logging.INFO)
 
+
 class Command(BaseCommand):
     help = 'Consume alerts from the alert streams configured in the settings.py ALERT_STREAMS'
 
@@ -21,7 +22,7 @@ class Command(BaseCommand):
         try:
             alert_streams = get_default_alert_streams()
         except ImproperlyConfigured as ex:
-            logger.error(f'{ex.__class__.__name__}: Configure your alert streams in a settings.py ALERT_STREAM list: {ex}')
+            logger.error(f'{ex.__class__.__name__}: Configure alert streams in settings.py ALERT_STREAMS: {ex}')
             exit(1)
 
         try:
