@@ -51,10 +51,10 @@ ALERT_STREAMS = [
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
-            'TOPIC_HANDLER': {
-                'sys.heartbeat': (lambda x: print(x)),
-                'tomtoolkit.test': (lambda x: print(x)),
-                'hermes.test': (lambda x: print(x)),
+            'TOPIC_HANDLERS': {
+                'sys.heartbeat': 'tom_alertstreams.alertstreams.hopskotch.heartbeat_handler',
+                'tomtoolkit.test': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'hermes.test': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
             },
         },
     },
@@ -72,10 +72,10 @@ ALERT_STREAMS = [
                 # 'auto.offset.reset': 'earliest',
                 # 'enable.auto.commit': False
             },
-            'TOPIC_HANDLER': {
-                'gcn.classic.text.LVC_INITIAL': (lambda x: print(x)),
-                'gcn.classic.text.LVC_PRELIMINARY': (lambda x: print(x)),
-                'gcn.classic.text.LVC_RETRACTION': (lambda x: print(x)),
+            'TOPIC_HANDLERS': {
+                'gcn.classic.text.LVC_INITIAL': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'gcn.classic.text.LVC_PRELIMINARY': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'gcn.classic.text.LVC_RETRACTION': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
             },
         },
     }
@@ -90,7 +90,7 @@ will provide `AlertStream` subclasses for major astromical Kafka streams. See be
 the `AlertStream` base class.
 * `OPTIONS`: A dictionary of key-value pairs specific to the`AlertStream` subclass given by `NAME`. The doc string for
 `AlertStream` subclass should document what is expected. Typically, a URL, authentication information, and a dictionary,
-`TOPIC_HANDLER`, will be required. See "Subclassing `AlertStream`" below.
+`TOPIC_HANDLERS`, will be required. See "Subclassing `AlertStream`" below.
 
 ## Alert Handling
 
