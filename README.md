@@ -42,46 +42,45 @@ dictionary for each Kafka stream. Here's an example `ALERT_STREAMS` configuratio
 [SCiMMA Hopskotch](https://scimma.org/hopskotch.html) and
 [GCN Classic over Kafka](https://gcn.nasa.gov/quickstart).
 
-
-    ```python
-    ALERT_STREAMS = [
-        {
-            'ACTIVE': True,
-            'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
-            'OPTIONS': {
-                'URL': 'kafka://kafka.scimma.org/',
-                'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
-                'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
-                'TOPIC_HANDLER': {
-                    'sys.heartbeat': (lambda x: print(x)),
-                    'tomtoolkit.test': (lambda x: print(x)),
-                    'hermes.test': (lambda x: print(x)),
-                },
+```python
+ALERT_STREAMS = [
+    {
+        'ACTIVE': True,
+        'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
+        'OPTIONS': {
+            'URL': 'kafka://kafka.scimma.org/',
+            'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
+            'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
+            'TOPIC_HANDLER': {
+                'sys.heartbeat': (lambda x: print(x)),
+                'tomtoolkit.test': (lambda x: print(x)),
+                'hermes.test': (lambda x: print(x)),
             },
         },
-        {
-            'ACTIVE': True,
-            'NAME': 'tom_alertstreams.alertstreams.gcn.GCNClassicAlertStream',
-            # The keys of the OPTIONS dictionary become (lower-case) properties of the AlertStream instance.
-            'OPTIONS': {
-                # see https://github.com/nasa-gcn/gcn-kafka-python#to-use for configuration details.
-                'GCN_CLASSIC_CLIENT_ID': os.getenv('GCN_CLASSIC_CLIENT_ID', None),
-                'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
-                'DOMAIN': 'gcn.nasa.gov',  # optional, defaults to 'gcn.nasa.gov'
-                'CONFIG': {  # optional
-                    # 'group.id': 'tom_alertstreams - llindstrom@lco.global',
-                    # 'auto.offset.reset': 'earliest',
-                    # 'enable.auto.commit': False
-                },
-                'TOPIC_HANDLER': {
-                    'gcn.classic.text.LVC_INITIAL': (lambda x: print(x)),
-                    'gcn.classic.text.LVC_PRELIMINARY': (lambda x: print(x)),
-                    'gcn.classic.text.LVC_RETRACTION': (lambda x: print(x)),
-                },
+    },
+    {
+        'ACTIVE': True,
+        'NAME': 'tom_alertstreams.alertstreams.gcn.GCNClassicAlertStream',
+        # The keys of the OPTIONS dictionary become (lower-case) properties of the AlertStream instance.
+        'OPTIONS': {
+            # see https://github.com/nasa-gcn/gcn-kafka-python#to-use for configuration details.
+            'GCN_CLASSIC_CLIENT_ID': os.getenv('GCN_CLASSIC_CLIENT_ID', None),
+            'GCN_CLASSIC_CLIENT_SECRET': os.getenv('GCN_CLASSIC_CLIENT_SECRET', None),
+            'DOMAIN': 'gcn.nasa.gov',  # optional, defaults to 'gcn.nasa.gov'
+            'CONFIG': {  # optional
+                # 'group.id': 'tom_alertstreams - llindstrom@lco.global',
+                # 'auto.offset.reset': 'earliest',
+                # 'enable.auto.commit': False
             },
-        }
-    ]
-    ```
+            'TOPIC_HANDLER': {
+                'gcn.classic.text.LVC_INITIAL': (lambda x: print(x)),
+                'gcn.classic.text.LVC_PRELIMINARY': (lambda x: print(x)),
+                'gcn.classic.text.LVC_RETRACTION': (lambda x: print(x)),
+            },
+        },
+    }
+]
+```
 
 The configuration dictionary for each `AlertStream` subclass w
 * `ACTIVE`: Boolean which tells `readstreams` to access this stream. Should be True, unless you want to
