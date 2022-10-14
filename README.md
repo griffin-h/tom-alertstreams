@@ -36,8 +36,9 @@ in the output.
 
 ## Configuration
 
-`ALERT_STREAMS` is a list of configuration dictionaries, one dictionary for each Kafka stream. Here's
-and example `ALERT_STREAMS` list that configures two Kafka streams:
+Each Kafka stream that your TOM (via `readstreams` listens to will have a configuration dictionary
+in your `settings.py` `ALERT_STREAMS`. `ALERT_STREAMS` is a list of configuration dictionaries, one
+dictionary for each Kafka stream. Here's an example `ALERT_STREAMS` configuration for two Kafka streams:
 [SCiMMA Hopskotch](https://scimma.org/hopskotch.html) and
 [GCN Classic over Kafka](https://gcn.nasa.gov/quickstart).
 
@@ -81,14 +82,15 @@ and example `ALERT_STREAMS` list that configures two Kafka streams:
     ]
     ```
 
+The configuration dictionary for each `AlertStream` subclass w
 * `ACTIVE`: Boolean which tells `readstreams` to access this stream. Should be True, unless you want to
 keep a configuration dictionary, but ignore the stream.
 * `NAME`: The name of the `AlertStream` subclass that implements the interface to this Kafka stream. `tom_alertstreams`
 will provide `AlertStream` subclasses for major astromical Kafka streams. See below for instructions on Subclassing
 the `AlertStream` base class.
-* `OPTIONS`: `AlertStream`-specific values
-
-documentation coming.
+* `OPTIONS`: A dictionary of key-value pairs specific to the`AlertStream` subclass given by `NAME`. The doc string for
+`AlertStream` subclass should document what is expected. Typically, a URL, authentication information, and a dictionary,
+`TOPIC_HANDLER`, will be required. See "Subclassing `AlertStream`" below.
 
 ## Alert Handling
 
