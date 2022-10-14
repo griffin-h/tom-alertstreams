@@ -162,15 +162,14 @@ ALERT_STREAMS = [
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
             'TOPIC_HANDLERS': {
-                # 'sys.heartbeat': (lambda x: print(x)),
                 'sys.heartbeat': 'tom_alertstreams.alertstreams.hopskotch.heartbeat_handler',
-                #'tomtoolkit.test': (lambda x: print(x)),
-                #'hermes.test': (lambda x: print(x)),
+                'tomtoolkit.test': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'hermes.test': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
             },
         },
     },
     {
-        'ACTIVE': False,
+        'ACTIVE': True,
         'NAME': 'tom_alertstreams.alertstreams.gcn.GCNClassicAlertStream',
         # The keys of the OPTIONS dictionary become (lower-case) properties of the AlertStream instance.
         'OPTIONS': {
@@ -184,9 +183,9 @@ ALERT_STREAMS = [
                 # 'enable.auto.commit': False
             },
             'TOPIC_HANDLERS': {
-                'gcn.classic.text.LVC_INITIAL': (lambda x: print(x)),
-                'gcn.classic.text.LVC_PRELIMINARY': (lambda x: print(x)),
-                'gcn.classic.text.LVC_RETRACTION': (lambda x: print(x)),
+                'gcn.classic.text.LVC_INITIAL': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'gcn.classic.text.LVC_PRELIMINARY': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'gcn.classic.text.LVC_RETRACTION': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
             },
         },
     }

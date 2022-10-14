@@ -33,18 +33,18 @@ class GCNClassicAlertStream(AlertStream):
                             config=self.config,
                             )
 
-        consumer.subscribe(list(self.topic_handler.keys()))
+        consumer.subscribe(list(self.topic_handlers.keys()))
 
         # logger.debug(f'Here is a list of the available topics for {self.domain}')
         # for topic in consumer.list_topics().topics:
         #     logger.debug(f'topic: {topic}')
 
         while True:
-            for message in consumer.consume():
-                message_topic = message.topic()
+            for alert in consumer.consume():
+                topic = alert.topic()
                 try:
-                    self.message_handler[message_topic](message)
+                    self.alert_handler[topic](alert)
                 except KeyError as err:
-                    logger.error(f'alert from topic {message_topic} received but no handler defined. err: {err}')
+                    logger.error(f'alert from topic {topic} received but no handler defined. err: {err}')
 
         consumer.close()

@@ -83,24 +83,21 @@ class AlertStream(abc.ABC):
             )
             raise ImproperlyConfigured(msg)
 
-        self.message_handler = self._process_message_handlers()
+        self.alert_handler = self._process_topic_handlers()
 
     def _get_stream_classname(self) -> str:
         return type(self).__qualname__
 
-    def _process_message_handlers(self):
-        """ convert the TOPIC_HANDLER values in to callable functions in
-        the self.message_handler dictionary. (keyed by topic, value is callable)
+    def _process_topic_handlers(self):
+        """ convert the TOPIC_HANDLERS values in to callable functions in
+        the returned message_handler dictionary. (keyed by topic, value is callable)
         """
-        # TODO: maybe TOPIC_HANDLER should remain untouched and this method
-        # should create an alert_handler dict keyed by topic with callable values
-        # derived from the string values of TOPIC_HANDLER
-
-        message_handler = {}
+        alert_handler = {}
         for topic, callable_string in self.topic_handlers.items():
-            logger.debug(f'AlertStreams._process_message_handlers - {topic}, {callable_string}')
-            message_handler[topic] = import_string(callable_string)
-        return message_handler
+            # convert string from TOPIC_HANDLERS in to a callable function in
+            # the message_handler dictionary (both keyed by topic string)
+            alert_handler[topic] = import_string(callable_string)
+        return alert_handler
 
     @abc.abstractmethod
     def listen(self):
@@ -108,3 +105,9 @@ class AlertStream(abc.ABC):
         this method are not expected to return.
         """
         pass
+
+
+def alert_logger(alert):
+    """Example alert handler
+    """
+    logger.info(f'Alert received {alert}')

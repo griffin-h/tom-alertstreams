@@ -79,23 +79,21 @@ class HopskotchAlertStream(AlertStream):
                 # type(metadata) is <hop.io.Metadata>
                 try:
                     # TODO: should probably use *args, **kwargs to pass unknow number of arguments
-                    self.message_handler[metadata.topic](alert, metadata)
+                    self.alert_handler[metadata.topic](alert, metadata)
                 except KeyError as err:
                     logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
                     # TODO: should define a default handler for all unhandeled topics
 
-    def _heartbeat_handler(self, heartbeat: JSONBlob, metadata: Metadata):
-        content: dict = heartbeat.content  # see hop_client reatthedocs
-        timestamp = datetime.fromtimestamp(content["timestamp"] / 1e6, tz=timezone.utc)
-        if heartbeat.content['count'] % 300 == 0:
-            logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}')
-            # logging.info(f'{timestamp.isoformat()} heartbeat JSONBlob: {heartbeat}')
-            # logging.info(f'{timestamp.isoformat()} metadata: {metadata}')
-
 
 def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
+    """Example alert handler for HopskotchAlertStream sys.heartbeat topic.
+
+    Note that HopskotchAlertStream.listen() method knows that Hopskotch alerts come with
+    both alert and metadata. So, the alert_handler methods have a signiture (taking both
+    as arguments) specific to this stream.
+    """
     content: dict = heartbeat.content  # see hop_client reatthedocs
     timestamp = datetime.fromtimestamp(content["timestamp"] / 1e6, tz=timezone.utc)
-    if True or heartbeat.content['count'] % 300 == 0:
+    if heartbeat.content['count'] % 300 == 0:
+        # mod 300 just for convenience so as not to flood logger
         logging.info(f'{timestamp.isoformat()} heartbeat.content dict: {heartbeat.content}. metadata: {metadata}')
-
