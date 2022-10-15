@@ -6,8 +6,8 @@
 no Views, and no templates. The `readstreams` management command reads the `settings.py` `ALERT_STREAMS`
 configuration and starts listening to each configured Kafka stream. It is not expected
 to return, and is intended to run along side your TOM's server component. The `ALERT_STREAMS`
-configuration (see below) tells `readstreams` what streams to access, what topics to listen to,
-and what to do with messages that arrive on a given topic.
+configuration (see below) tells `readstreams` what streams to access, how to access them,
+what topics to listen to, and what to do with messages that arrive on a given topic.
 
 ## Installation
 
