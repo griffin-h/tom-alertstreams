@@ -102,12 +102,7 @@ class AlertStream(abc.ABC):
     @abc.abstractmethod
     def listen(self):
         """Listen at the steam and dispatch alerts to handlers. Subclass extentions of
-        this method are not expected to return.
+        this method are not expected to return. See hopskotch.py and gcn.py for example
+        implementations.
         """
         pass
-
-
-def alert_logger(alert):
-    """Example alert handler
-    """
-    logger.info(f'Alert received {alert}')

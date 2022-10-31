@@ -48,3 +48,16 @@ class GCNClassicAlertStream(AlertStream):
                     logger.error(f'alert from topic {topic} received but no handler defined. err: {err}')
 
         consumer.close()
+
+
+def alert_logger(alert):
+    """Example alert handler for GCN Classic over Kafka
+
+    This alert handler simply logs the topic and value of the cimpl.Message instance.
+
+    See https://docs.confluent.io/4.1.1/clients/confluent-kafka-python/index.html#message
+    for cimpl.Message details.
+    """
+    logger.info(f'gcn.alert_logger alert.topic(): {alert.topic()}')
+    logger.info(f'gcn.alert_logger alert.value(): {alert.value()}')
+

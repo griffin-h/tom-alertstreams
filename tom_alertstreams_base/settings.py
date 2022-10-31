@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
 import logging.config
 import os
 from pathlib import Path
@@ -183,10 +182,10 @@ ALERT_STREAMS = [
                 # 'enable.auto.commit': False
             },
             'TOPIC_HANDLERS': {
-                'gcn.classic.text.LVC_INITIAL': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
-                'gcn.classic.text.LVC_PRELIMINARY': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
-                'gcn.classic.text.LVC_RETRACTION': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
-                'gcn.classic.text.LVC_TEST': 'tom_alertstreams.alertstreams.alertstream.alert_logger',
+                'gcn.classic.text.LVC_INITIAL': 'tom_alertstreams.alertstreams.gcn.alert_logger',
+                'gcn.classic.text.LVC_PRELIMINARY': 'tom_alertstreams.alertstreams.gcn.alert_logger',
+                'gcn.classic.text.LVC_RETRACTION': 'tom_alertstreams.alertstreams.gcn.alert_logger',
+                'gcn.classic.text.LVC_TEST': 'tom_alertstreams.alertstreams.gcn.alert_logger',
             },
         },
     }
