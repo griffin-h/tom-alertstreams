@@ -100,6 +100,6 @@ def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
 
 
 def alert_logger(alert: JSONBlob, metadata: Metadata):
-    """Example alert handler The method signiture is specific to Hopskotch alerts
+    """Example alert handler. The method signsture is specific to Hopskotch alerts.
     """
     logger.info(f'Alert received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
