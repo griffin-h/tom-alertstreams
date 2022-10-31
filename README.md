@@ -131,6 +131,7 @@ want your TOM to listen to. If so, you need only to configure your TOM to use it
   `OPTIONS` configuration dictionary.
 
 3. Implement the `listen()` method.
+
    This method will be called by the `readstreams` management command and is not expected to return. It
    should instanciate your consumer, subscribe to the topics configured in `ALERT_STREAMS`, and start
    consuming. The detail of this will depend on the kafka-client used. See `alertstreams.gcn.listen()`
@@ -141,5 +142,7 @@ want your TOM to listen to. If so, you need only to configure your TOM to use it
    kafka client. Users of your `AlertStream`-subclass will write these topic-specific alert handling methods
    and configure them in the `TOPIC_HANLDERS` dictionary of their `ALERT_STREAMS` configuration.
    The `AlertStream` base class will set up the `alert_handler` dictionary according to your users'
-   configuration. It helps your user to provide an example `alert_hander()` function in your module as
-   an example. (Again, see `alertstreams.gcn.listen()` and `alertstreams.hopskotch.listen()` for examples).
+   configuration. It helps your users to provide an example `alert_hander()` function in your module as
+   an example. (Again, see `alertstreams.gcn.listen()` and `alertstreams.hopskotch.listen()`, their
+   configurations in `settings.py`, and the `alertstreams.gcn.alert_logger()` and
+   `alertstreams.hopskotch.alert_logger() methods, for example).
