@@ -123,9 +123,19 @@ want your TOM to listen to. If so, you need only to configure your TOM to use it
 `ALERT_STREAMS`. If you must implement your own `AlertStream` subclass, please get in touch. In the meantime, here's a brief outline:
 
 1. Create subclass of `AlertStream`
-2. Create `required_keys` and `allowed_keys` class variables in your `AlertStream`-subclass. These are list of
-strings refering to the keys of the `OPTIONS` dictionary. The purpose of these is to help TOM developers using
-your `AlertStream`-subclass with their `ALERT_STREAMS` `OPTIONS` configuration dictionary. 
-
-
-more documentation coming.
+2. Create `required_keys` and `allowed_keys` class variables in your `AlertStream`-subclass.
+These are list of strings refering to the keys of the `OPTIONS` dictionary. The purpose of these is to
+help TOM developers using your `AlertStream`-subclass with the key-value pairs in their `ALERT_STREAMS`
+`OPTIONS` configuration dictionary.
+3. Implement the `listen()` method.
+This method will be called by the `readstreams` management command as is not expected to return. It
+should instanciate your consumer, subscribe to the topics configured in `ALERT_STREAMS`, and start
+consuming. The detail of this will depend on the kafka-client used. See `alertstreams.gcn.listen()`
+and `alertstreams.hopskotch.listen()` for examples to follow.
+The loop which consumes messages in your `listen()` method should extract the topic from each message
+and call `self.alert_handler[topic]()` with the message or message-derived arguments specific to your
+kafka client. Users of your `AlertStream`-subclass will write these topic-specific alert handling methods
+and configure them in the `TOPIC_HANLDERS` dictionary of their `ALERT_STREAMS` configuration.
+The `AlertStream` base class will set up the `alert_handler` dictionary according to your users'
+configuration. It helps your user to provide an example `alert_hander()` function in your module as
+an example. (Again, see `alertstreams.gcn.listen()` and `alertstreams.hopskotch.listen()` for examples).
