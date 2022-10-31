@@ -39,14 +39,20 @@ class GCNClassicAlertStream(AlertStream):
         # for topic in consumer.list_topics().topics:
         #     logger.debug(f'topic: {topic}')
 
+        # what is a cimpl.Message?, cimpl.KafkaError?
+        # see https://docs.confluent.io/4.1.1/clients/confluent-kafka-python/index.html#message
         while True:
             for alert in consumer.consume():
-                topic = alert.topic()
-                try:
-                    self.alert_handler[topic](alert)
-                except KeyError as err:
-                    logger.error(f'alert from topic {topic} received but no handler defined. err: {err}')
-
+                kafka_error = alert.error()  # cimpl.KafkaError
+                if kafka_error is None:
+                    # no error, so call the alert handler
+                    topic = alert.topic()
+                    try:
+                        self.alert_handler[topic](alert)
+                    except KeyError as err:
+                        logger.error(f'alert from topic {topic} received but no handler defined. err: {err}')
+                else:
+                    logger.error(f'GCNClassicAlertStream KafkaError: {kafka_error.name()}: {kafka_error.str()}')
         consumer.close()
 
 
