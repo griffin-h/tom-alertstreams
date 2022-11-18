@@ -6,7 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 from hop import Stream
 from hop.auth import Auth
 from hop.models import JSONBlob
-from hop.io import Metadata, StartPosition
+from hop.io import Metadata, StartPosition, list_topics
 
 from tom_alertstreams.alertstreams.alertstream import AlertStream
 
@@ -26,6 +26,26 @@ class HopskotchAlertStream(AlertStream):
         # So, do them now to catch any errors, before listen() is spawned in it's own Process.
         self.stream_url = self.get_stream_url()
         self.stream = self.get_stream()
+
+    def get_all_public_topics(self) -> list[str]:
+        """Returns the up-to-date list of Topic names to consume.
+
+        Use the saved options to repeatedly construct the topic list, and
+        keep it in sync with the publicaly_readable topics from SCiMMA Auth.
+
+        The Topic list is a combination of the
+          a. the publicly_readable Topics from SCiMMA Auth
+          b. any topics supplied on the command line via -T, --topic
+        """
+        hop_auth = Auth(self.username, self.password)
+        logger.info('getting publicly_readable topics from SCiMMA Auth.')
+        # use the hop-client to ask Kafka directly for the topics since SCiMMA Auth can be out of sync
+        # include only topics that a) contain a '.'; b) don't start with '__' (excludes __consumer_offsets)
+        publicly_readable_topics = [topic for topic in list_topics(self.url, hop_auth).keys()
+                                    if not (topic.startswith('__') and (topic.count('.')==0))]
+        logger.info(f'publicly_readable_topics: {publicly_readable_topics}')
+
+        return publicly_readable_topics
 
     def get_stream_url(self) -> str:
         """For Hopskotch, topics are specified on the url. So, this
@@ -50,7 +70,14 @@ class HopskotchAlertStream(AlertStream):
             base_stream_url += '/'
 
         # append comma-separated topics to base URL
-        topics = ','.join(list(self.topic_handlers.keys()))  # 'topic1,topic2,topic3'
+        specified_topics = list(self.topic_handlers.keys())
+        if '*' in specified_topics:
+            # Add all public topics if a asterisk is set in the topic_handlers
+            public_topics = self.get_all_public_topics()
+            specified_topics.remove('*')
+            specified_topics = list(set(specified_topics + public_topics))
+
+        topics = ','.join(specified_topics)  # 'topic1,topic2,topic3'
         hopskotch_stream_url = base_stream_url + topics
 
         logger.debug(f'HopskotchAlertStream.get_stream_url url: {hopskotch_stream_url}')
@@ -77,10 +104,12 @@ class HopskotchAlertStream(AlertStream):
             for alert, metadata in src.read(metadata=True):
                 # type(gcn_circular) is <hop.models.GNCCircular>
                 # type(metadata) is <hop.io.Metadata>
-                try:
+                if metadata.topic in self.alert_handler:
                     # TODO: should probably use *args, **kwargs to pass unknow number of arguments
                     self.alert_handler[metadata.topic](alert, metadata)
-                except KeyError as err:
+                elif '*' in self.alert_handler:
+                    self.alert_handler['*'](alert, metadata)
+                else:
                     logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
                     # TODO: should define a default handler for all unhandeled topics
 
