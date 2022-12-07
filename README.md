@@ -93,6 +93,7 @@ the `AlertStream` subclass should document what is expected. Typically, a URL, a
 dictionary, `TOPIC_HANDLERS`, will be required. See "Subclassing `AlertStream`" below. The `AlertStream` subclass will
 convert the key-value pairs of the `OPTIONS` dictionary into properties (and values) of the `AlertStream` subclass
 instance.
+  * The hopskotch alert stream supports a wildcard of `*` for an alert handler topic name. If specified, ALL public topics will be subscribed and use that handler function. A directly specified topic handler will always be used before the `*` handler for any topic that is covered twice. 
 
 ### Getting Kafka Stream Credentials
 As part of your `OPTIONS` for each Kafka stream, you need to configure access credentials. Visit these links
