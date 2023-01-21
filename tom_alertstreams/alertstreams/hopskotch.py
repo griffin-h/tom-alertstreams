@@ -122,7 +122,7 @@ class HopskotchAlertStream(AlertStream):
                             if not matched_handler:
                                 self.alert_handler['*'](alert, metadata)
                         else:
-                            logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
+                            logger.error(f'alert from topic {metadata.topic} received but no handler defined.')
                             # TODO: should define a default handler for all unhandeled topics
                         if (tz.now() - last_check_time).total_seconds() > self.PUBLIC_TOPIC_CHECK_INTERVAL:
                             last_check_time = tz.now()
@@ -133,7 +133,7 @@ class HopskotchAlertStream(AlertStream):
                                 self.stream_url = self.get_stream_url()
                                 break
             except Exception as ex:
-                logger.error(ex)
+                logger.error(f'HopskotchAlertStream.listen: {ex}')
 
 def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
     """Example alert handler for HopskotchAlertStream sys.heartbeat topic.
