@@ -77,7 +77,7 @@ class HopskotchAlertStream(AlertStream):
             # Add all public topics if a asterisk is set in the topic_handlers
             specified_topics = list(set(specified_topics + self.public_topics))
         # Also remove topics with wildcards in them
-        specified_topics = [topic for topic in specified_topics if '*' in topic]
+        specified_topics = [topic for topic in specified_topics if not '*' in topic]
 
         topics = ','.join(specified_topics)  # 'topic1,topic2,topic3'
         hopskotch_stream_url = base_stream_url + topics
@@ -124,7 +124,7 @@ class HopskotchAlertStream(AlertStream):
                         else:
                             logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
                             # TODO: should define a default handler for all unhandeled topics
-                        if (tz.now - last_check_time).total_seconds() > self.PUBLIC_TOPIC_CHECK_INTERVAL:
+                        if (tz.now() - last_check_time).total_seconds() > self.PUBLIC_TOPIC_CHECK_INTERVAL:
                             last_check_time = tz.now()
                             public_topics = self.get_all_public_topics()
                             if set(public_topics) != set(self.public_topics):
