@@ -162,6 +162,7 @@ ALERT_STREAMS = [
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
             'TOPIC_HANDLERS': {
                 'sys.heartbeat': 'tom_alertstreams.alertstreams.hopskotch.heartbeat_handler',
+                'sys.heartbeatnew': 'tom_alertstreams.alertstreams.hopskotch.heartbeat_handler',
                 'tomtoolkit.test': 'tom_alertstreams.alertstreams.hopskotch.alert_logger',
                 'hermes.test': 'tom_alertstreams.alertstreams.hopskotch.alert_logger',
             },
