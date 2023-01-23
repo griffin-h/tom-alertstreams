@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
 import logging
 import re
+import uuid
+
 from django.utils import timezone as tz
 from django.core.exceptions import ImproperlyConfigured
 
