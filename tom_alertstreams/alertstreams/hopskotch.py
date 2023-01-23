@@ -18,7 +18,7 @@ logger.setLevel(logging.DEBUG)
 class HopskotchAlertStream(AlertStream):
     """
     """
-    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
+    required_keys = ['URL', 'GROUP_ID', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
     allowed_keys = ['URL', 'GROUP_ID', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
     PUBLIC_TOPIC_CHECK_INTERVAL = 300  # Seconds between checking for new public topics
     def __init__(self, *args, **kwargs) -> None:

@@ -157,6 +157,8 @@ ALERT_STREAMS = [
         'ACTIVE': True,
         'NAME': 'tom_alertstreams.alertstreams.hopskotch.HopskotchAlertStream',
         'OPTIONS': {
+            # The hop-client requires that the GROUP_ID prefix match the SCIMMA_AUTH_USERNAME
+            'GROUP_ID': os.getenv('SCIMMA_AUTH_USERNAME', "") + '-' + os.getenv('HOPSKOTCH_GROUP_ID', 'tom-alertstreams-dev'),
             'URL': 'kafka://kafka.scimma.org/',
             'USERNAME': os.getenv('SCIMMA_AUTH_USERNAME', None),
             'PASSWORD': os.getenv('SCIMMA_AUTH_PASSWORD', None),
