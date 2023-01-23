@@ -152,4 +152,11 @@ def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
 def alert_logger(alert: JSONBlob, metadata: Metadata):
     """Example alert handler. The method signsture is specific to Hopskotch alerts.
     """
-    logger.info(f'Alert received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
+    # search the header (list of tuples) for a UUID-tuple (keyed by '_id')
+    # eg. ('_id', b'$\xd6oGmVM\xed\x97\xe7|\x1c\x8f\x11V\xe9')
+    alert_uuid_tuple = next((item for item in metadata.headers if item[0] == '_id'), None)
+    if alert_uuid_tuple:
+        alert_uuid = uuid.UUID(bytes=alert_uuid_tuple[1])
+    else:
+        alert_uuid = None
+    logger.info(f'Alert (uuid={alert_uuid}) received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
