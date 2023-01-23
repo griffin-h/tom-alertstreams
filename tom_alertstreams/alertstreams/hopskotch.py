@@ -14,7 +14,7 @@ from hop.io import Metadata, StartPosition, list_topics
 from tom_alertstreams.alertstreams.alertstream import AlertStream
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
 
 
 class HopskotchAlertStream(AlertStream):
@@ -96,15 +96,13 @@ class HopskotchAlertStream(AlertStream):
 
     def listen(self):
         super().listen()
-        # TODO: Provide example of making this a collections.defaultdict with a
-        # default_factory which handles unexpected topics nicely.
-
         # TODO: alternatively, WARN upon OPTIONS['topics'] extries that don't have
         # handlers in the alert_handler. (i.e they've configured a topic subscription
         # without providing a handler for the topic. So, warn them).
         last_check_time = tz.now()
         while True:
             try:
+                logger.info(f'HopskotchAlertStream.listen opening stream: {self.stream_url} with group_id: {self.group_id}')
                 with self.stream.open(self.stream_url, 'r', group_id=self.group_id) as src:
                     for alert, metadata in src.read(metadata=True):
                         # type(gcn_circular) is <hop.models.GNCCircular>
@@ -160,5 +158,6 @@ def alert_logger(alert: JSONBlob, metadata: Metadata):
     if alert_uuid_tuple:
         alert_uuid = uuid.UUID(bytes=alert_uuid_tuple[1])
     else:
+        # in this case the alert was probably published with hop-client<0.8.0
         alert_uuid = None
     logger.info(f'Alert (uuid={alert_uuid}) received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
