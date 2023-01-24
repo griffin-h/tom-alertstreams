@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
 import logging
 import re
+import uuid
+
 from django.utils import timezone as tz
 from django.core.exceptions import ImproperlyConfigured
 
@@ -12,13 +14,13 @@ from hop.io import Metadata, StartPosition, list_topics
 from tom_alertstreams.alertstreams.alertstream import AlertStream
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
 
 
 class HopskotchAlertStream(AlertStream):
     """
     """
-    required_keys = ['URL', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
+    required_keys = ['URL', 'GROUP_ID', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
     allowed_keys = ['URL', 'GROUP_ID', 'USERNAME', 'PASSWORD', 'TOPIC_HANDLERS']
     PUBLIC_TOPIC_CHECK_INTERVAL = 300  # Seconds between checking for new public topics
     def __init__(self, *args, **kwargs) -> None:
@@ -77,7 +79,7 @@ class HopskotchAlertStream(AlertStream):
             # Add all public topics if a asterisk is set in the topic_handlers
             specified_topics = list(set(specified_topics + self.public_topics))
         # Also remove topics with wildcards in them
-        specified_topics = [topic for topic in specified_topics if '*' in topic]
+        specified_topics = [topic for topic in specified_topics if not '*' in topic]
 
         topics = ','.join(specified_topics)  # 'topic1,topic2,topic3'
         hopskotch_stream_url = base_stream_url + topics
@@ -94,15 +96,13 @@ class HopskotchAlertStream(AlertStream):
 
     def listen(self):
         super().listen()
-        # TODO: Provide example of making this a collections.defaultdict with a
-        # default_factory which handles unexpected topics nicely.
-
         # TODO: alternatively, WARN upon OPTIONS['topics'] extries that don't have
         # handlers in the alert_handler. (i.e they've configured a topic subscription
         # without providing a handler for the topic. So, warn them).
         last_check_time = tz.now()
         while True:
             try:
+                logger.info(f'HopskotchAlertStream.listen opening stream: {self.stream_url} with group_id: {self.group_id}')
                 with self.stream.open(self.stream_url, 'r', group_id=self.group_id) as src:
                     for alert, metadata in src.read(metadata=True):
                         # type(gcn_circular) is <hop.models.GNCCircular>
@@ -122,9 +122,9 @@ class HopskotchAlertStream(AlertStream):
                             if not matched_handler:
                                 self.alert_handler['*'](alert, metadata)
                         else:
-                            logger.error(f'alert from topic {metadata.topic} received but no handler defined. err: {err}')
+                            logger.error(f'alert from topic {metadata.topic} received but no handler defined.')
                             # TODO: should define a default handler for all unhandeled topics
-                        if (tz.now - last_check_time).total_seconds() > self.PUBLIC_TOPIC_CHECK_INTERVAL:
+                        if (tz.now() - last_check_time).total_seconds() > self.PUBLIC_TOPIC_CHECK_INTERVAL:
                             last_check_time = tz.now()
                             public_topics = self.get_all_public_topics()
                             if set(public_topics) != set(self.public_topics):
@@ -133,7 +133,7 @@ class HopskotchAlertStream(AlertStream):
                                 self.stream_url = self.get_stream_url()
                                 break
             except Exception as ex:
-                logger.error(ex)
+                logger.error(f'HopskotchAlertStream.listen: {ex}')
 
 def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
     """Example alert handler for HopskotchAlertStream sys.heartbeat topic.
@@ -152,4 +152,12 @@ def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
 def alert_logger(alert: JSONBlob, metadata: Metadata):
     """Example alert handler. The method signsture is specific to Hopskotch alerts.
     """
-    logger.info(f'Alert received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
+    # search the header (list of tuples) for a UUID-tuple (keyed by '_id')
+    # eg. ('_id', b'$\xd6oGmVM\xed\x97\xe7|\x1c\x8f\x11V\xe9')
+    alert_uuid_tuple = next((item for item in metadata.headers if item[0] == '_id'), None)
+    if alert_uuid_tuple:
+        alert_uuid = uuid.UUID(bytes=alert_uuid_tuple[1])
+    else:
+        # in this case the alert was probably published with hop-client<0.8.0
+        alert_uuid = None
+    logger.info(f'Alert (uuid={alert_uuid}) received on topic {metadata.topic}: {alert};  metatdata: {metadata}')
