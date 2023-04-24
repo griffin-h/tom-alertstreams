@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 import logging
 import re
 import uuid
+import traceback
 
 from django.utils import timezone as tz
 from django.core.exceptions import ImproperlyConfigured
@@ -14,7 +15,6 @@ from hop.io import Metadata, StartPosition, list_topics
 from tom_alertstreams.alertstreams.alertstream import AlertStream
 
 logger = logging.getLogger(__name__)
-#logger.setLevel(logging.DEBUG)
 
 
 class HopskotchAlertStream(AlertStream):
@@ -114,7 +114,7 @@ class HopskotchAlertStream(AlertStream):
                             # First check all wildcard topics to see if they will match this topic
                             matched_handler = False
                             for topic in self.alert_handler.keys():
-                                if '*' in topic and re.match(topic, metadata.topic):
+                                if topic != '*' and '*' in topic and re.match(topic, metadata.topic):
                                     self.alert_handler[topic](alert, metadata)
                                     matched_handler = True
                                     break
@@ -134,6 +134,7 @@ class HopskotchAlertStream(AlertStream):
                                 break
             except Exception as ex:
                 logger.error(f'HopskotchAlertStream.listen: {ex}')
+                logger.error(traceback.format_exc())  # Show the traceback so we have a chance of figuring out what is breaking
 
 def heartbeat_handler(heartbeat: JSONBlob, metadata: Metadata):
     """Example alert handler for HopskotchAlertStream sys.heartbeat topic.
