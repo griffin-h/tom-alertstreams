@@ -993,19 +993,19 @@ Pillow = "*"
 
 [[package]]
 name = "gcn-kafka"
-version = "0.2.3"
+version = "0.3.3"
 description = "Kafka client for NASA's General Coordinates Network (GCN)"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 files = [
-    {file = "gcn-kafka-0.2.3.tar.gz", hash = "sha256:44747bdb0e25362887d9e421f63480c6701a9b6e0a3b3019a799cd905607d308"},
-    {file = "gcn_kafka-0.2.3-py3-none-any.whl", hash = "sha256:ac51a35c1c597786decdbc1cb422d7a012a63c28e221c4a2f20434cf6d33d810"},
+    {file = "gcn-kafka-0.3.3.tar.gz", hash = "sha256:9a0a165fa6446676d7d785c46b1a0bb6097dffd19d7975fcbc4e58098522d60a"},
+    {file = "gcn_kafka-0.3.3-py3-none-any.whl", hash = "sha256:98917938158df945431f9882899ecf145f8610879d7dfc26de6e13aa31c5e414"},
 ]
 
 [package.dependencies]
 authlib = "*"
 certifi = "*"
-confluent-kafka = ">=1.6.1"
+confluent-kafka = ">=2.2.0"
 requests = "*"
 
 [package.extras]
@@ -2144,4 +2144,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "013a76cd8b2fca88feb737b10a05fd2ffbe47dab97d15e848ea6143af913de8d"
+content-hash = "9515d2e47a1a290198359ca4e354a9d5c6ee15a4e56e35cc2d5c0c1d9631b0a9"
