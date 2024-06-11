@@ -1036,13 +1036,13 @@ test = ["ci-watson (>=0.3.0)", "codecov", "pytest (>=4.6.0)", "pytest-astropy"]
 
 [[package]]
 name = "hop-client"
-version = "0.8.0"
+version = "0.9.0"
 description = "A pub-sub client library for Multi-messenger Astrophysics"
 optional = false
-python-versions = ">=3.6.*"
+python-versions = ">=3.6"
 files = [
-    {file = "hop-client-0.8.0.tar.gz", hash = "sha256:340831d3c5c716599e678827ea994913d41100ca9eaac86ffaa2ab980be8ea51"},
-    {file = "hop_client-0.8.0-py3-none-any.whl", hash = "sha256:0c9ed7e795d1c06b74bd173e9f40ecd51f712e83f1a35e9b4e26037a1fdac3e9"},
+    {file = "hop-client-0.9.0.tar.gz", hash = "sha256:88929f318e4205c649e806252d1d3fc9ad559e68b5cbea7755205d9590fcae55"},
+    {file = "hop_client-0.9.0-py3-none-any.whl", hash = "sha256:b172dcb4164f936c2f2b1b653e69332a321a9799e1e5cbcafdb44f75066f26c7"},
 ]
 
 [package.dependencies]
@@ -1053,7 +1053,7 @@ toml = ">=0.9.4"
 xmltodict = ">=0.9.0"
 
 [package.extras]
-dev = ["autopep8", "flake8", "pytest (>=5.0,<5.4)", "pytest-console-scripts", "pytest-cov", "pytest-runner", "twine"]
+dev = ["autopep8", "flake8 (>=3.3.0)", "pytest (>=6.2.5)", "pytest-console-scripts", "pytest-cov", "pytest-runner", "twine"]
 docs = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-programoutput"]
 
 [[package]]
@@ -2144,4 +2144,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "9515d2e47a1a290198359ca4e354a9d5c6ee15a4e56e35cc2d5c0c1d9631b0a9"
+content-hash = "d077b05a4cec3331fa833a1253f13fbe90f084378f5646c4edda8b3bf064de55"
